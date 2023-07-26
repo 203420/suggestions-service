@@ -47,7 +47,7 @@ class classifierView(APIView):
         predicted_probs = classifier.predict_proba(vectorized_text)
 
         for i in range(len(predicted_probs[0])):
-            if predicted_probs[0][i] > 0.1:
+            if predicted_probs[0][i] > 0.105:
                 if "/" in str(classifier.classes_[i]):
                     words = classifier.classes_[i].split("/")
                     for word in words:
@@ -56,11 +56,9 @@ class classifierView(APIView):
         return key_words
 
 
-
     def post(self, request):
         serializer = wordsListSerializer(data=request.data)
         if serializer.is_valid():
             words = self.format_response(serializer.data['text'])
-            #print(words)
             return Response(words, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
